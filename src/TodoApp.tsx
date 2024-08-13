@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
-import { handleAdd, handleDelete } from "./services/todoService";
+import { handelUpdate, handleAdd, handleDelete } from "./services/todoService";
 import { Todo } from "./types/todo";
 import TodoList from "./components/TodoList";
 
@@ -31,7 +31,24 @@ const TodoApp: React.FC = () => {
   const handleAddTodo = () => {
     handleAdd(todos, setTodos, setError, todoText, setTodoText);
   };
+  const handleRenameTodo = (id: string, newName: string) => {
+    handelUpdate(id, { text: newName }, todos, setTodos, setError);
+  };
 
+  const handleCompleteTodo = (id: string) => {
+    const todo = todos.find((t) => t.id === id);
+
+    if (todo) {
+      const newCompletedAt = todo.completedAt ? undefined : new Date();
+      handelUpdate(
+        id,
+        { completedAt: newCompletedAt },
+        todos,
+        setTodos,
+        setError
+      );
+    }
+  };
   const handleDeleteTodo = (id: string) => {
     handleDelete(id, todos, setTodos, setError);
   };
@@ -42,6 +59,8 @@ const TodoApp: React.FC = () => {
       todoText={todoText}
       setTodoText={setTodoText}
       handleAdd={handleAddTodo}
+      handleRename={handleRenameTodo}
+      handleComplete={handleCompleteTodo}
       handleDelete={handleDeleteTodo}
       error={error}
     />

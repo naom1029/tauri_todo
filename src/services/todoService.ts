@@ -12,7 +12,13 @@ export const handleAdd = (
 ): void => {
   setError(null);
   if (todoText !== "") {
-    const newTodo: Todo = { id: uuidv4(), text: todoText, tags: [] };
+    const newTodo: Todo = {
+      id: uuidv4(),
+      text: todoText,
+      createdAt: new Date(),
+      completedAt: undefined,
+      tags: [],
+    };
     invoke("save_data", { data: JSON.stringify([...todos, newTodo]) })
       .then(() => {
         setTodos([...todos, newTodo]);
@@ -27,6 +33,26 @@ export const handleAdd = (
   } else {
     setError("テキストが入力されていません。");
   }
+};
+
+// Todoを更新する関数
+export const handelUpdate = (
+  id: string,
+  updates: Partial<Todo>,
+  todos: Todo[],
+  setTodos: (prevTodos: Todo[]) => void,
+  setError: (error: string | null) => void
+): void => {
+  const updatedTodos = todos.map((todo) =>
+    todo.id === id ? { ...todo, ...updates } : todo
+  );
+
+  invoke("save_data", { data: JSON.stringify(updatedTodos) })
+    .then(() => setTodos(updatedTodos))
+    .catch((e) => {
+      setError("データの削除中にエラーが発生しました。");
+      console.error(e);
+    });
 };
 
 // Todoを削除する関数
