@@ -1,4 +1,4 @@
-use std::fs::{self,OpenOptions};
+use std::fs::{OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
 pub trait DataStorage: Send + Sync {
