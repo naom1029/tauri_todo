@@ -1,0 +1,8 @@
+.header-containers {
+  display: flex; /* コンポーネントを横並びに配置 */
+  justify-content: space-between; /* 左右の要素を端に寄せる */
+  align-items: center; /* 垂直方向で中央揃え */
+  padding: 10px 20px; /* 内側の余白 */
+  background-color: #f8f9fa; /* 背景色 */
+  border-bottom: 1px solid #ddd; /* 下にボーダーを追加 */
+}
