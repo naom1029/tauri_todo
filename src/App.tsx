@@ -1,13 +1,11 @@
-import React from 'react';
-import TodoApp from './TodoApp.tsx'; // TodoAppコンポーネントのインポート
+import TodoApp from "./TodoApp.tsx"; // TodoAppコンポーネントのインポート
+import { Header } from "./components/header";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Todo List</h1>
-      </header>
-      <TodoApp /> 
+      <Header />
+      <TodoApp />
     </div>
   );
 }

@@ -6,8 +6,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "app",
-    "version": "0.0.0"
+    "productName": "todo-app",
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
