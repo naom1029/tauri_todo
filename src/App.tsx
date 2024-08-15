@@ -1,4 +1,4 @@
-import TodoApp from "./TodoApp.tsx"; // TodoAppコンポーネントのインポート
+import TodoApp from "./TodoContainer.tsx"; // TodoAppコンポーネントのインポート
 import { Header } from "./components/header";
 
 function App() {

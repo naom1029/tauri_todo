@@ -8,9 +8,9 @@ import {
   Checkbox,
 } from "@mui/material";
 import { Todo } from "../types/todo";
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 interface TodoListProps {
   todos: Todo[];
@@ -61,7 +61,7 @@ const TodoList: React.FC<TodoListProps> = ({
 
   return (
     <div>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         {/* Todoを追加するためのフォーム */}
         <TextField
           label="Add Todo"
@@ -104,7 +104,9 @@ const TodoList: React.FC<TodoListProps> = ({
               <DateTimePicker
                 label="Reminder"
                 value={todo.reminderAt}
-                onChange={(newValue) => handleSetReminder(todo.id, newValue || undefined)}
+                onChange={(newValue) =>
+                  handleSetReminder(todo.id, newValue || undefined)
+                }
               />
               <Button onClick={() => handleDelete(todo.id)} color="secondary">
                 Delete
@@ -135,8 +137,8 @@ const TodoList: React.FC<TodoListProps> = ({
             </ListItem>
           ))}
         </List>
-    </LocalizationProvider>
-      </div>
+      </LocalizationProvider>
+    </div>
   );
 };
 
