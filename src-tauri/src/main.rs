@@ -18,7 +18,7 @@ fn main() {
     println!("USE_DATABASEの設定値: {}", use_database);
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![save_data, load_data, show_reminder])
+        .invoke_handler(tauri::generate_handler![add_data, update_data,load_data, delete_data,show_reminder])
         .setup(move |app| {
             let app_handle = app.app_handle();  
             let _storage: Box<dyn DataStorage> = if use_database {
@@ -46,14 +46,26 @@ fn main() {
 }
 
 #[tauri::command]
-fn save_data(data: String, _storage: tauri::State<Box<dyn DataStorage>>) -> Result<(), String> {
+fn add_data(data: String, _storage: tauri::State<Box<dyn DataStorage>>) -> Result<(), String> {
     println!("データ保存中: {}", data);
-    _storage.save_data(&data)    
+    _storage.add_data(&data)    
+}
+
+#[tauri::command]
+fn update_data(id:String,data: String, _storage: tauri::State<Box<dyn DataStorage>>) -> Result<(), String> {
+    println!("データ保存中: {}", data);
+    _storage.update_data(&id,&data)    
 }
 
 #[tauri::command]
 fn load_data(_storage: tauri::State<Box<dyn DataStorage>>) -> Result<String, String> {
+    println!("データ読み込み中");
     _storage.load_data()
+}
+#[tauri::command]
+fn delete_data(id:String, _storage: tauri::State<Box<dyn DataStorage>>) -> Result<(), String> {
+    println!("データ削除中: {}", id);
+    _storage.delete_data(&id)    
 }
 
 #[tauri::command]

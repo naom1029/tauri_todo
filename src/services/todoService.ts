@@ -18,13 +18,10 @@ export const loadTodo = async (): Promise<Todo[]> => {
 };
 
 // 新しいTodoを追加する関数
-export const addTodo = (
-  todos: Todo[],
-  setTodos: (todos: Todo[]) => void,
-  setError: (error: string | null) => void,
+export const addTodo = async (
   todoText: string,
-  setTodoText: (text: string) => void
-): void => {
+  setError: (error: string | null) => void
+): Promise<void> => {
   setError(null);
   if (todoText !== "") {
     const newTodo: Todo = {
@@ -33,11 +30,8 @@ export const addTodo = (
       createdAt: new Date(),
       completedAt: undefined,
     };
-    invoke("save_data", { data: JSON.stringify([...todos, newTodo]) })
-      .then(() => {
-        setTodos([...todos, newTodo]);
-        setTodoText("");
-      })
+    await invoke("add_data", { data: JSON.stringify(newTodo) })
+      .then()
       .catch((e) => {
         console.error("データ保存時のエラー:", e);
         setError(
@@ -50,38 +44,38 @@ export const addTodo = (
 };
 
 // Todoを更新する関数
-export const updateTodo = (
+export const updateTodo = async (
   id: string,
   updates: Partial<Todo>,
-  todos: Todo[],
-  setTodos: (prevTodos: Todo[]) => void,
   setError: (error: string | null) => void
-): void => {
-  const updatedTodos = todos.map((todo) =>
-    todo.id === id ? { ...todo, ...updates } : todo
+): Promise<void> => {
+  setError(null);
+
+  // `undefined` を `null` に変換
+  const sanitizedUpdates = Object.fromEntries(
+    Object.entries(updates).map(([key, value]) => [
+      key,
+      value === undefined ? null : value,
+    ])
   );
 
-  invoke("save_data", { data: JSON.stringify(updatedTodos) })
-    .then(() => setTodos(updatedTodos))
-    .catch((e) => {
-      setError("データの削除中にエラーが発生しました。");
-      console.error(e);
-    });
+  await invoke("update_data", {
+    id: id,
+    data: JSON.stringify(sanitizedUpdates),
+  }).catch((e) => {
+    setError("データの更新中にエラーが発生しました。");
+    console.error(e);
+  });
 };
 
 // Todoを削除する関数
-export const deleteTodo = (
+export const deleteTodo = async (
   id: string,
-  todos: Todo[],
-  setTodos: (todos: Todo[]) => void,
   setError: (error: string | null) => void
-): void => {
+): Promise<void> => {
   setError(null);
-  const updatedTodos = todos.filter((todo) => todo.id !== id);
-  invoke("save_data", { data: JSON.stringify(updatedTodos) })
-    .then(() => setTodos(updatedTodos))
-    .catch((e) => {
-      setError("データの削除中にエラーが発生しました。");
-      console.error(e);
-    });
+  await invoke("delete_data", { id: id }).catch((e) => {
+    setError("データの削除中にエラーが発生しました。");
+    console.error(e);
+  });
 };

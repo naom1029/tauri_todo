@@ -23,34 +23,46 @@ const TodoApp: React.FC = () => {
       });
   }, []);
 
-  const handleAddTodo = () => {
-    addTodo(todos, setTodos, setError, todoText, setTodoText);
+  const handleAddTodo = async () => {
+    await addTodo(todoText, setError);
+    loadTodo()
+      .then(setTodos)
+      .catch((e) => setError(e.message));
   };
 
-  const handleRenameTodo = (id: string, newName: string) => {
-    updateTodo(id, { text: newName }, todos, setTodos, setError);
+  const handleRenameTodo = async (id: string, newName: string) => {
+    await updateTodo(id, { text: newName }, setError);
+    loadTodo()
+      .then(setTodos)
+      .catch((e) => setError(e.message));
   };
 
-  const handleCompleteTodo = (id: string) => {
+  const handleCompleteTodo = async (id: string) => {
     const todo = todos.find((t) => t.id === id);
     if (todo) {
       const newCompletedAt = todo.completedAt ? undefined : new Date();
-      updateTodo(
-        id,
-        { completedAt: newCompletedAt },
-        todos,
-        setTodos,
-        setError
-      );
+      await updateTodo(id, { completedAt: newCompletedAt }, setError);
+      loadTodo()
+        .then(setTodos)
+        .catch((e) => setError(e.message));
     }
   };
 
-  const handleSetReminder = (id: string, newreminderAt: Date | undefined) => {
-    updateTodo(id, { reminderAt: newreminderAt }, todos, setTodos, setError);
+  const handleSetReminder = async (
+    id: string,
+    newreminderAt: Date | undefined
+  ) => {
+    await updateTodo(id, { reminderAt: newreminderAt }, setError);
+    loadTodo()
+      .then(setTodos)
+      .catch((e) => setError(e.message));
   };
 
   const handleDeleteTodo = (id: string) => {
-    deleteTodo(id, todos, setTodos, setError);
+    deleteTodo(id, setError);
+    loadTodo()
+      .then(setTodos)
+      .catch((e) => setError(e.message));
   };
 
   return (
