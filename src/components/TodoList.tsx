@@ -68,8 +68,21 @@ const TodoList: React.FC<TodoListProps> = ({
           variant="outlined"
           value={todoText}
           onChange={(e) => setTodoText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleAdd();
+              setTodoText("");
+            }
+          }}
         />
-        <Button onClick={handleAdd} variant="contained" color="primary">
+        <Button
+          onClick={() => {
+            handleAdd();
+            setTodoText("");
+          }}
+          variant="contained"
+          color="primary"
+        >
           Add
         </Button>
         {error && <p style={{ color: "red" }}>{error}</p>}
