@@ -3,6 +3,8 @@
 
 mod storage;
 use tauri::Manager;
+use tauri::SystemTray;
+use tauri::SystemTrayEvent;
 use dotenv::dotenv;
 use std::env;
 use storage::{DataStorage, FileSystemStorage, DatabaseStorage};
@@ -15,21 +17,29 @@ fn main() {
     };
     println!("USE_DATABASEの設定値: {}", use_database);
 
-    let _storage: Box<dyn DataStorage> = if use_database {
-        println!("データベースストレージを使用します。");
-        Box::new(DatabaseStorage)
-    } else {
-        println!("ファイルシステムストレージを使用します。");
-        Box::new(FileSystemStorage)
-    };
-
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![save_data, load_data])
+        .invoke_handler(tauri::generate_handler![save_data, load_data, show_reminder])
         .setup(move |app| {
-            let _app_handle = app.app_handle();
+            let app_handle = app.app_handle();  
+            let _storage: Box<dyn DataStorage> = if use_database {
+                println!("データベースストレージを使用します。");
+                Box::new(DatabaseStorage)
+            } else {
+                println!("ファイルシステムストレージを使用します。");
+                Box::new(FileSystemStorage::new(app_handle.clone()))
+            };
             println!("アプリケーションのセットアップが完了しました。");
             app.manage(_storage);  // ここでstorageをアプリケーションの状態として管理
             Ok(())
+        })
+        .system_tray(SystemTray::new())
+        .on_system_tray_event(|app, event| match event {
+            SystemTrayEvent::LeftClick { .. } => {
+                let window = app.get_window("main").unwrap();
+                window.show().unwrap();
+                window.set_focus().unwrap();
+            }
+            _ => {}
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -44,4 +54,17 @@ fn save_data(data: String, _storage: tauri::State<Box<dyn DataStorage>>) -> Resu
 #[tauri::command]
 fn load_data(_storage: tauri::State<Box<dyn DataStorage>>) -> Result<String, String> {
     _storage.load_data()
+}
+
+#[tauri::command]
+async fn show_reminder(app_handle: tauri::AppHandle, todo_text: String) {
+    let window = app_handle.get_window("main").unwrap();
+    window.show().unwrap();
+    window.set_focus().unwrap();
+
+    tauri::api::notification::Notification::new(app_handle.config().tauri.bundle.identifier.clone())
+        .title("タスクリマインダー")
+        .body(&format!("タスクの時間です: {}", todo_text))
+        .show()
+        .unwrap();
 }

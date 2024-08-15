@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { handelUpdate, handleAdd, handleDelete } from "./services/todoService";
+import {
+  loadTodo,
+  updateTodo,
+  addTodo,
+  deleteTodo,
+} from "./services/todoService";
 import { Todo } from "./types/todo";
 import TodoList from "./components/TodoList";
 
@@ -9,7 +14,7 @@ const TodoApp: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    handleLoadTodo()
+    loadTodo()
       .then((loadedTodos) => {
         setTodos(loadedTodos);
       })
@@ -17,24 +22,20 @@ const TodoApp: React.FC = () => {
         setError(e.message);
       });
   }, []);
-  
-  const handleLoadTodo = () => {
-    handleLoadTodo();
-  }
 
   const handleAddTodo = () => {
-    handleAdd(todos, setTodos, setError, todoText, setTodoText);
+    addTodo(todos, setTodos, setError, todoText, setTodoText);
   };
 
   const handleRenameTodo = (id: string, newName: string) => {
-    handelUpdate(id, { text: newName }, todos, setTodos, setError);
+    updateTodo(id, { text: newName }, todos, setTodos, setError);
   };
 
   const handleCompleteTodo = (id: string) => {
     const todo = todos.find((t) => t.id === id);
     if (todo) {
       const newCompletedAt = todo.completedAt ? undefined : new Date();
-      handelUpdate(
+      updateTodo(
         id,
         { completedAt: newCompletedAt },
         todos,
@@ -45,11 +46,11 @@ const TodoApp: React.FC = () => {
   };
 
   const handleSetReminder = (id: string, newreminderAt: Date | undefined) => {
-    handelUpdate(id, { reminderAt: newreminderAt }, todos, setTodos, setError);
+    updateTodo(id, { reminderAt: newreminderAt }, todos, setTodos, setError);
   };
 
   const handleDeleteTodo = (id: string) => {
-    handleDelete(id, todos, setTodos, setError);
+    deleteTodo(id, todos, setTodos, setError);
   };
 
   return (

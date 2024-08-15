@@ -17,9 +17,13 @@
         "open": true
       }
     },
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": false
+    },
     "windows": [
       {
-        "title": "app",
+        "title": "todo-app",
         "width": 800,
         "height": 600
       }
@@ -30,7 +34,12 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "windows": {
+        "webviewInstallMode": {
+          "type": "downloadBootstrapper"
+        }
+      },
+      "identifier": "com.example.myapp",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
