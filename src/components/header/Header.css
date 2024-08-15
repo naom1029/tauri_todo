@@ -1,8 +1,48 @@
 .header-containers {
-  display: flex; /* コンポーネントを横並びに配置 */
-  justify-content: space-between; /* 左右の要素を端に寄せる */
-  align-items: center; /* 垂直方向で中央揃え */
-  padding: 10px 20px; /* 内側の余白 */
-  background-color: #f8f9fa; /* 背景色 */
-  border-bottom: 1px solid #ddd; /* 下にボーダーを追加 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #3498db; /* より鮮やかな青色 */
+  color: #fff;
+  border-bottom: 3px solid #2980b9; /* より濃い青色のボーダー */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-containers > * {
+  flex: 1;
+}
+
+.header-containers .header-center {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.header-containers .header-left,
+.header-containers .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-containers a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.header-containers a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* アイコンのスタイル（必要に応じて） */
+.header-icon {
+  font-size: 20px;
+  margin-right: 8px;
 }
