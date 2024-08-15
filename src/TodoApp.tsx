@@ -12,13 +12,17 @@ const TodoApp: React.FC = () => {
   useEffect(() => {
     invoke("load_data")
       .then((data) => {
-        const parseData = JSON.parse(data as string);
         try {
+          const parseData = JSON.parse(data as string);
           if (parseData) {
-            setTodos(parseData);
+            const todosWithDates = parseData.map((todo: any) => ({
+              ...todo,
+              reminderAt: todo.reminderAt ? new Date(todo.reminderAt) : undefined,
+            }));
+            setTodos(todosWithDates);
           }
         } catch (e) {
-          setError("データの読み込みに失敗しました。");
+          setError("データのパースに失敗しました。");
           console.error(e);
         }
       })
@@ -27,6 +31,7 @@ const TodoApp: React.FC = () => {
         console.error(e);
       });
   }, []);
+  
 
   const handleAddTodo = () => {
     handleAdd(todos, setTodos, setError, todoText, setTodoText);
@@ -37,7 +42,6 @@ const TodoApp: React.FC = () => {
 
   const handleCompleteTodo = (id: string) => {
     const todo = todos.find((t) => t.id === id);
-
     if (todo) {
       const newCompletedAt = todo.completedAt ? undefined : new Date();
       handelUpdate(
@@ -49,6 +53,11 @@ const TodoApp: React.FC = () => {
       );
     }
   };
+
+  const handleSetReminder = (id: string, newreminderAt: Date | undefined) => {
+    handelUpdate(id, { reminderAt: newreminderAt }, todos, setTodos, setError);
+  };
+
   const handleDeleteTodo = (id: string) => {
     handleDelete(id, todos, setTodos, setError);
   };
@@ -61,6 +70,7 @@ const TodoApp: React.FC = () => {
       handleAdd={handleAddTodo}
       handleRename={handleRenameTodo}
       handleComplete={handleCompleteTodo}
+      handleSetReminder={handleSetReminder}
       handleDelete={handleDeleteTodo}
       error={error}
     />

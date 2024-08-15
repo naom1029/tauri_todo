@@ -3,5 +3,6 @@ export interface Todo {
   text: string;
   createdAt: Date;
   completedAt?: Date;
-  tags: string[];
+  reminderAt?: Date;
+  deadlineAt?: Date;
 }

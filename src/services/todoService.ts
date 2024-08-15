@@ -17,7 +17,6 @@ export const handleAdd = (
       text: todoText,
       createdAt: new Date(),
       completedAt: undefined,
-      tags: [],
     };
     invoke("save_data", { data: JSON.stringify([...todos, newTodo]) })
       .then(() => {
