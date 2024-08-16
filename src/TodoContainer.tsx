@@ -13,6 +13,7 @@ const TodoApp: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  // 初回レンダリング時にTodoリストをロード
   useEffect(() => {
     loadTodo()
       .then((loadedTodos) => {
@@ -23,18 +24,21 @@ const TodoApp: React.FC = () => {
       });
   }, []);
 
+  // Todoを追加するハンドラー
   const handleAddTodo = () => {
-    addTodo(todos, setTodos, setError, todoText, setTodoText);
+    addTodo(todoText, todos, setTodos, setError).then(() => setTodoText(""));
   };
 
+  // Todoの名前を変更するハンドラー
   const handleRenameTodo = (id: string, newName: string) => {
     updateTodo(id, { text: newName }, todos, setTodos, setError);
   };
 
+  // Todoの完了状態を切り替えるハンドラー
   const handleCompleteTodo = (id: string) => {
     const todo = todos.find((t) => t.id === id);
     if (todo) {
-      const newCompletedAt = todo.completedAt ? undefined : new Date();
+      const newCompletedAt = todo.completedAt ? null : new Date();
       updateTodo(
         id,
         { completedAt: newCompletedAt },
@@ -45,10 +49,15 @@ const TodoApp: React.FC = () => {
     }
   };
 
-  const handleSetReminder = (id: string, newreminderAt: Date | undefined) => {
-    updateTodo(id, { reminderAt: newreminderAt }, todos, setTodos, setError);
+  // リマインダーを設定するハンドラー
+  const handleSetReminder = (
+    id: string,
+    newReminderAt: Date | undefined | null
+  ) => {
+    updateTodo(id, { reminderAt: newReminderAt }, todos, setTodos, setError);
   };
 
+  // Todoを削除するハンドラー
   const handleDeleteTodo = (id: string) => {
     deleteTodo(id, todos, setTodos, setError);
   };

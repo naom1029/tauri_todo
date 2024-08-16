@@ -19,7 +19,7 @@ interface TodoListProps {
   handleAdd: () => void;
   handleRename: (id: string, newName: string) => void;
   handleComplete: (id: string) => void;
-  handleSetReminder: (id: string, reminderAt: Date | undefined) => void;
+  handleSetReminder: (id: string, reminderAt: Date | undefined | null) => void;
   handleDelete: (id: string) => void;
   error: string | null;
 }
@@ -103,10 +103,8 @@ const TodoList: React.FC<TodoListProps> = ({
               )}
               <DateTimePicker
                 label="Reminder"
-                value={todo.reminderAt}
-                onChange={(newValue) =>
-                  handleSetReminder(todo.id, newValue || undefined)
-                }
+                value={todo.reminderAt || null} // undefinedではなくnullを設定
+                onChange={(newValue) => handleSetReminder(todo.id, newValue)}
               />
               <Button onClick={() => handleDelete(todo.id)} color="secondary">
                 Delete
