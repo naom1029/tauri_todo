@@ -1,11 +1,8 @@
 import React from "react";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Button, TextField } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import ja from "date-fns/locale/ja";
 import { Todo } from "../types/todo";
+import CustomDatePicker from "../../../components/header/CustomDatePicker";
 
 interface TodoListProps {
   todos: Todo[];
@@ -39,7 +36,10 @@ const TodoList: React.FC<TodoListProps> = ({
       renderCell: (params: GridRenderCellParams) => (
         <input
           type="checkbox"
-          checked={params.row.completedAt !== null}
+          checked={
+            params.row.completedAt !== undefined &&
+            params.row.completedAt !== null
+          }
           onChange={() => handleComplete(params.row.id)}
         />
       ),
@@ -71,13 +71,11 @@ const TodoList: React.FC<TodoListProps> = ({
       headerName: "リマインド日時",
       width: 220,
       renderCell: (params: GridRenderCellParams<Todo>) => (
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ja}>
-          <DatePicker
-            value={params.row.reminderAt}
-            onChange={(newValue) => handleSetReminder(params.row.id, newValue)}
-            slotProps={{ textField: { size: "small" } }}
-          />
-        </LocalizationProvider>
+        <CustomDatePicker
+          value={params.row.reminderAt}
+          onChange={(newValue) => handleSetReminder(params.row.id, newValue)}
+          slotProps={{ textField: { size: "small" } }}
+        />
       ),
     },
     { field: "deadlineAt", headerName: "期限", width: 180, type: "dateTime" },
