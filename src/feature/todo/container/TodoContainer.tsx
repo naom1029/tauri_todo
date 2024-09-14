@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  loadTodo,
-  updateTodo,
-  addTodo,
-  deleteTodo,
-} from "./services/todoService";
-import { Todo } from "./types/todo";
-import TodoList from "./components/TodoList";
+import { loadTodo, updateTodo, addTodo, deleteTodo } from "../api/todoApi";
+import TodoList from "../components/TodoList";
+import { Todo } from "../types/todo";
 
-const TodoApp: React.FC = () => {
+const TodoContainer: React.FC = () => {
   const [todoText, setTodoText] = useState<string>("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -25,21 +20,19 @@ const TodoApp: React.FC = () => {
   }, []);
 
   // Todoを追加するハンドラー
-  const handleAddTodo = () => {
+  const handleAdd = () => {
     addTodo(todoText, todos, setTodos, setError).then(() => setTodoText(""));
   };
 
-  // Todoの名前を変更するハンドラー
-  const handleRenameTodo = (id: string, newName: string) => {
-    updateTodo(id, { text: newName }, todos, setTodos, setError);
+  const handleRename = async (id: string, newName: string) => {
+    await updateTodo(id, { text: newName }, todos, setTodos, setError);
   };
 
-  // Todoの完了状態を切り替えるハンドラー
-  const handleCompleteTodo = (id: string) => {
+  const handleComplete = async (id: string) => {
     const todo = todos.find((t) => t.id === id);
     if (todo) {
       const newCompletedAt = todo.completedAt ? null : new Date();
-      updateTodo(
+      await updateTodo(
         id,
         { completedAt: newCompletedAt },
         todos,
@@ -49,17 +42,21 @@ const TodoApp: React.FC = () => {
     }
   };
 
-  // リマインダーを設定するハンドラー
-  const handleSetReminder = (
+  const handleSetReminder = async (
     id: string,
     newReminderAt: Date | undefined | null
   ) => {
-    updateTodo(id, { reminderAt: newReminderAt }, todos, setTodos, setError);
+    await updateTodo(
+      id,
+      { reminderAt: newReminderAt },
+      todos,
+      setTodos,
+      setError
+    );
   };
 
-  // Todoを削除するハンドラー
-  const handleDeleteTodo = (id: string) => {
-    deleteTodo(id, todos, setTodos, setError);
+  const handleDelete = async (id: string) => {
+    await deleteTodo(id, todos, setTodos, setError);
   };
 
   return (
@@ -67,14 +64,14 @@ const TodoApp: React.FC = () => {
       todos={todos}
       todoText={todoText}
       setTodoText={setTodoText}
-      handleAdd={handleAddTodo}
-      handleRename={handleRenameTodo}
-      handleComplete={handleCompleteTodo}
+      handleAdd={handleAdd}
+      handleRename={handleRename}
+      handleComplete={handleComplete}
       handleSetReminder={handleSetReminder}
-      handleDelete={handleDeleteTodo}
+      handleDelete={handleDelete}
       error={error}
     />
   );
 };
 
-export default TodoApp;
+export default TodoContainer;

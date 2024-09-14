@@ -1,11 +1,11 @@
-import TodoApp from "./TodoContainer.tsx"; // TodoAppコンポーネントのインポート
 import { Header } from "./components/header";
+import TodoContainer from "./feature/todo/container/TodoContainer.tsx";
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <TodoApp />
+      <TodoContainer />
     </div>
   );
 }
